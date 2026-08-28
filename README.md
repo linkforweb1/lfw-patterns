@@ -1,105 +1,107 @@
 # LFW Patterns Library
 
-Repository privata per la gestione e distribuzione centralizzata dei pattern Gutenberg e Full Site Editing (FSE) per i siti WordPress.
+Libreria centrale di **block pattern** Gutenberg, distribuita ai siti WordPress dal plugin
+**LFW Cloud Patterns** (v2.x).
 
-Questa repository funge da "Cloud Hub". Ospita i file `.json` dei layout, che vengono poi richiamati e installati dinamicamente sui vari siti client tramite il plugin custom **LFW Cloud Patterns**.
+Questa repo è la **fonte di verità**: ospita i file `.json` dei pattern nella cartella `patterns/`.
+Il plugin li scarica e li registra con `register_block_pattern()`, così compaiono nell'inserter
+di ogni sito sotto la categoria **LFW Patterns**.
 
----
-
-## ⚙️ Architettura e Funzionamento
-
-Il sistema si basa su una comunicazione API a senso unico (Pull) tra GitHub e i siti WordPress:
-
-1. **Il Cloud (GitHub):** Tutti i layout creati vengono esportati nativamente dall'editor FSE di WordPress sotto forma di file `.json` e caricati nella cartella `/patterns` di questa repository.
-2. **Il Client (WordPress):** Il plugin *LFW Cloud Patterns* interroga le API REST di GitHub (tramite un Personal Access Token).
-3. **La Sincronizzazione:** Il plugin scansiona la cartella, scarica i `.json` e li inietta nel Core di WordPress usando la funzione nativa `register_block_pattern()`.
-4. **Il Risultato:** All'interno del Block Inserter e nell'Editor FSE dei siti client, comparirà in automatico la categoria personalizzata **LFW Patterns** con le anteprime visive pronte all'uso.
+> Stato: repository **ripartita da zero** il 2026-08-28. La cartella `patterns/` è vuota: i pattern
+> verranno aggiunti uno per uno solo se conformi allo standard di authoring (vedi sotto). La
+> cronologia git conserva i vecchi pattern rimossi.
 
 ---
 
-🚀 Workflow Operativo
----------------------
+## Come funziona
 
-Aggiungere un nuovo Pattern
----------------------------
+```
+GitHub (questa repo)                     Sito WordPress (client)
+  patterns/*.json  ──── raw.githubusercontent.com ────►  plugin LFW Cloud Patterns
+  manifest.json (opz.)                                     └─ register_block_pattern()
+```
 
-1.  Entra nell'editor FSE o Gutenberg di un sito qualsiasi.
-    
-2.  Disegna il tuo layout usando blocchi nativi.
-    
-3.  Se usi immagini, usa preferibilmente **URL pubblici** (es. _picsum.photos/id/XX/800/600_) tramite la funzione "Inserisci da URL" per evitare link rotti.
-    
-4.  Salva il blocco e vai in _Aspetto > Editor > Pattern > I miei pattern_.
-    
-5.  Clicca sui 3 puntini e seleziona **Esporta come JSON**.
-    
-6.  Rinomina il file in modo parlante (es. hero-dark-mode.json).
-    
-7.  Fai drag & drop del file nella cartella /patterns/ di questa repository e fai il **Commit**.
-    
-8.  Sul sito WordPress, clicca il bottone in alto **Sincronizza Pattern** per svuotare la cache e vedere il risultato.
-    
+- **Pull only**: i siti leggono, non scrivono. Repo **pubblica**, nessun token richiesto sui client.
+- Il plugin elenca i file via `manifest.json` (se presente) o via API `git/trees` (1 chiamata),
+  poi scarica ogni `.json` da `raw` (nessun rate limit).
+- Sync automatico: all'attivazione del plugin, ogni giorno via WP-Cron, o col bottone
+  **Sincronizza Pattern** nella barra admin.
+- Config sul client (override in `wp-config.php`, opzionali):
+  `LFW_PATTERNS_REPO` (`linkforweb1/lfw-patterns`), `LFW_PATTERNS_REF` (`main`),
+  `LFW_PATTERNS_PATH` (`patterns`), `LFW_PATTERNS_TOKEN` (solo se la repo torna privata).
 
-Aggiornare un Pattern esistente
--------------------------------
+---
 
-1.  Modifica il pattern in WordPress e riesportalo in JSON.
-    
-2.  Carica il nuovo file in /patterns/ mantenendo **esattamente lo stesso nome** del vecchio file.
-    
-3.  GitHub sovrascriverà il file precedente.
-    
-4.  Fai il Commit e lancia la sincronizzazione sul sito client.
-    
+## Formato di un pattern
 
-Eliminare un Pattern in massa
------------------------------
+Un file `patterns/<slug>.json`. Sono accettati sia gli **export "Esporta come JSON"** dell'editor
+(`{"__file":"wp_block","title","content",…}`) sia lo **schema pattern completo**:
 
-Per eliminare più pattern contemporaneamente senza software esterni:
+```json
+{
+  "title": "Hero — CTA centrata",
+  "slug": "lfw/hero-cta-centered",
+  "description": "Sezione full-width con occhiello, titolo, testo e due bottoni.",
+  "categories": ["lfw-hero", "call-to-action"],
+  "keywords": ["hero", "cta", "banner"],
+  "viewportWidth": 1400,
+  "content": "<!-- wp:group ... /-->"
+}
+```
 
-1.  Dalla home della repository, premi il tasto . (punto) sulla tastiera. Si aprirà l'editor web _GitHub.dev_.
-    
-2.  Apri la cartella /patterns/.
-    
-3.  Tieni premuto Ctrl / Cmd e clicca sui file da cancellare.
-    
-4.  Tasto destro > **Delete**.
-    
-5.  Vai nella tab _Source Control_ (a sinistra), inserisci un messaggio e clicca **Commit & Push**.
-    
+Il plugin usa `title` + `content` e, se presenti, propaga `slug`, `categories`, `keywords`,
+`blockTypes`, `viewportWidth`, `description`, `inserter`.
 
-⚠️ Comportamento del Core (Cancellazione Pattern)
--------------------------------------------------
+---
 
-Il plugin usa pattern **Non-Sincronizzati** (regolari).Se elimini un file .json da questa repository:
+## Standard di authoring (obbligatorio prima del commit)
 
-*   Il pattern **scomparirà dall'Inseritore Blocchi** (i clienti non potranno più aggiungerlo a nuove pagine).
-    
-*   Il pattern **NON scomparirà dalle pagine esistenti**. Tutto il contenuto precedentemente impaginato sui siti dei clienti rimarrà perfettamente integro, poiché il codice viene fisicamente copiato nel database al momento dell'inserimento.
-    
+Un pattern entra in libreria solo se è **portabile** tra temi e siti diversi. Checklist:
 
-🛠️ Requisiti di Sistema (Plugin Client)
-----------------------------------------
+- [ ] **Solo blocchi core** (`core/*`). Niente blocchi di temi o plugin
+      (`outermost/icon-block`, `kadence/*`, `generateblocks/*`, …). Per le icone: SVG inline in `core/html`.
+- [ ] **Nessun `#hex` / `rgb()` grezzo sul testo.** Colori via slug di preset
+      (`"backgroundColor":"base"`, `"textColor":"contrast"`) o ereditati. Hex grezzo ammesso solo
+      su elementi **decorativi** (gradienti di sfondo, bordi), mai come unico veicolo di leggibilità.
+- [ ] **Nessun `px`** su `fontSize` e su spaziature. Usa gli slug di scala
+      (`small`…`xx-large`, `var:preset|spacing|30..80`), `rem`, o `clamp()` per titoli fluidi.
+- [ ] **Nessuna immagine/font/video esterno.** `core/image` senza `src` (placeholder), oppure asset
+      committati in `patterns/assets/`. Sempre `aspectRatio`, mai `height` fissa in px.
+- [ ] **Larghezze** in `%` o via `align:"wide"|"full"` + `layout:"constrained"`. Niente `contentSize`
+      fisso salvo motivo.
+- [ ] **Contenuti dinamici** dove ha senso: `core/site-title`, `core/site-logo`, `core/navigation`,
+      `core/query` + `core/post-*`, `core/search` prendono da soli i dati del sito ospite.
+- [ ] Rimuovi `metadata.patternName` di altri temi e le classi di plugin di animazione (`agl …`).
+- [ ] Niente `href`/ID/menu specifici di un sito.
+- [ ] `slug` esplicito con namespace `lfw/`. `viewportWidth` per un'anteprima non schiacciata.
+- [ ] Testato su Twenty Twenty-Five **+** un tema con palette propria **+** un tema senza palette.
+- [ ] Round-trip pulito: `serialize_blocks(parse_blocks($content)) === $content`.
 
-Per far funzionare il collegamento su un nuovo sito web, assicurati che:
+Pattern fortemente art-directed (hero illustrati, landing brand): ammessi ma marcati con categoria
+`lfw-landing` e comunque **senza asset esterni** e con testo leggibile anche senza i colori grezzi.
 
-*   Il plugin _LFW Cloud Patterns_ sia installato e attivo.
-    
-*   All'interno del file del plugin siano correttamente inseriti:
-    
-    *   Il tuo **Username** GitHub.
-        
-    *   Il nome esatto di questa **Repository**.
-        
-    *   Un **Personal Access Token (classic)** con permessi repo e scadenza impostata su _No Expiration_.
+---
 
-## 📁 Struttura della Repository
+## Aggiungere / aggiornare / rimuovere un pattern
+
+- **Aggiungere**: crea `patterns/<slug>.json` conforme alla checklist → commit → sul sito, bottone
+  **Sincronizza Pattern**.
+- **Aggiornare**: sovrascrivi lo stesso file → commit → sincronizza.
+- **Rimuovere**: cancella il file → commit → sincronizza. Il pattern sparisce dall'inserter;
+  **le pagine già impaginate restano intatte** (il markup è copiato nel DB all'inserimento).
+- Se aggiungi un `manifest.json` alla radice (`{"files":["patterns/a.json", …]}`), il plugin salta
+  del tutto l'API di GitHub. Tienilo allineato ai file presenti (o generalo in CI).
+
+---
+
+## Struttura
 
 ```text
 /
-├── README.md               # Questo file
-└── patterns/               # Cartella target letta dal plugin
-    ├── hero-home.json
-    ├── about-team.json
-    ├── cta-newsletter.json
-    └── ...
+├── README.md
+├── manifest.json          # opzionale: elenco esplicito dei pattern
+└── patterns/
+    ├── .gitkeep
+    ├── assets/            # (opz.) immagini/font dei pattern self-contained
+    └── <slug>.json
+```
