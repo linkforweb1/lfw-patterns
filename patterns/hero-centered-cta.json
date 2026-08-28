@@ -2,8 +2,17 @@
     "title": "Hero — titolo centrato con due CTA",
     "slug": "lfw/hero-centered-cta",
     "description": "Sezione full-width: occhiello, titolo, testo e due pulsanti, centrati. Solo blocchi core, colori a slug, spaziature a preset, nessuna immagine.",
-    "categories": ["lfw-hero", "call-to-action", "banner"],
-    "keywords": ["hero", "cta", "intro", "banner", "header"],
+    "categories": [
+        "call-to-action",
+        "banner"
+    ],
+    "keywords": [
+        "hero",
+        "cta",
+        "intro",
+        "banner",
+        "header"
+    ],
     "viewportWidth": 1400,
     "content": "<!-- wp:group {\"tagName\":\"section\",\"align\":\"full\",\"backgroundColor\":\"base\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|80\",\"bottom\":\"var:preset|spacing|80\"},\"blockGap\":\"var:preset|spacing|40\"}},\"layout\":{\"type\":\"constrained\"}} -->\n<section class=\"wp-block-group alignfull has-base-background-color has-background\" style=\"padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)\"><!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"textTransform\":\"uppercase\",\"fontWeight\":\"600\",\"letterSpacing\":\"0.12em\"}},\"fontSize\":\"small\"} -->\n<p class=\"has-text-align-center has-small-font-size\" style=\"font-weight:600;letter-spacing:0.12em;text-transform:uppercase\">Occhiello</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"lineHeight\":\"1.1\"}},\"fontSize\":\"xx-large\"} -->\n<h1 class=\"wp-block-heading has-text-align-center has-xx-large-font-size\" style=\"line-height:1.1\">Il titolo principale, forte e in una riga</h1>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph {\"align\":\"center\",\"fontSize\":\"medium\"} -->\n<p class=\"has-text-align-center has-medium-font-size\">Una frase di supporto: spiega il valore in modo chiaro e invita all'azione senza giri di parole.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:buttons {\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|20\"}}} -->\n<div class=\"wp-block-buttons\"><!-- wp:button {\"className\":\"is-style-fill\"} -->\n<div class=\"wp-block-button is-style-fill\"><a class=\"wp-block-button__link wp-element-button\" href=\"#\">Azione principale</a></div>\n<!-- /wp:button -->\n\n<!-- wp:button {\"className\":\"is-style-outline\"} -->\n<div class=\"wp-block-button is-style-outline\"><a class=\"wp-block-button__link wp-element-button\" href=\"#\">Azione secondaria</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons --></section>\n<!-- /wp:group -->\n"
 }
