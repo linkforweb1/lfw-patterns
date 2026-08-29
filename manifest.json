@@ -1,0 +1,14 @@
+{
+    "count": 9,
+    "files": [
+        "patterns/content-media-split.json",
+        "patterns/cta-split.json",
+        "patterns/faq-accordion.json",
+        "patterns/features-three-columns.json",
+        "patterns/hero-centered-cta.json",
+        "patterns/pricing-three-columns.json",
+        "patterns/stats-band.json",
+        "patterns/team-grid.json",
+        "patterns/testimonials-two.json"
+    ]
+}
