@@ -1,0 +1,18 @@
+{
+    "slug": "lfw/faq-accordion",
+    "title": "FAQ — elenco a fisarmonica",
+    "description": "Titolo e una serie di domande espandibili con blocco core/details (fisarmonica nativa, nessun plugin). Solo blocchi core.",
+    "categories": [
+        "text"
+    ],
+    "keywords": [
+        "faq",
+        "domande",
+        "risposte",
+        "fisarmonica",
+        "accordion",
+        "aiuto"
+    ],
+    "viewportWidth": 1200,
+    "content": "<!-- wp:group {\"tagName\":\"section\",\"align\":\"full\",\"backgroundColor\":\"base\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|80\",\"bottom\":\"var:preset|spacing|80\"},\"blockGap\":\"var:preset|spacing|30\"}},\"layout\":{\"type\":\"constrained\"}} -->\n<section class=\"wp-block-group alignfull has-base-background-color has-background\" style=\"padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)\"><!-- wp:heading {\"textAlign\":\"center\",\"fontSize\":\"x-large\"} -->\n<h2 class=\"wp-block-heading has-text-align-center has-x-large-font-size\">Domande frequenti</h2>\n<!-- /wp:heading -->\n\n<!-- wp:details -->\n<details class=\"wp-block-details\"><summary>Come funziona il servizio?</summary><!-- wp:paragraph -->\n<p>Rispondi in due o tre frasi, con parole semplici e un esempio concreto.</p>\n<!-- /wp:paragraph --></details>\n<!-- /wp:details -->\n\n<!-- wp:details -->\n<details class=\"wp-block-details\"><summary>Quanto tempo serve per partire?</summary><!-- wp:paragraph -->\n<p>Rispondi in due o tre frasi, con parole semplici e un esempio concreto.</p>\n<!-- /wp:paragraph --></details>\n<!-- /wp:details -->\n\n<!-- wp:details -->\n<details class=\"wp-block-details\"><summary>Posso cambiare piano in seguito?</summary><!-- wp:paragraph -->\n<p>Rispondi in due o tre frasi, con parole semplici e un esempio concreto.</p>\n<!-- /wp:paragraph --></details>\n<!-- /wp:details -->\n\n<!-- wp:details -->\n<details class=\"wp-block-details\"><summary>Come contatto l’assistenza?</summary><!-- wp:paragraph -->\n<p>Rispondi in due o tre frasi, con parole semplici e un esempio concreto.</p>\n<!-- /wp:paragraph --></details>\n<!-- /wp:details --></section>\n<!-- /wp:group -->"
+}
