@@ -243,13 +243,14 @@ function lfw_patterns_lint($content, $meta = array()) {
     }
 
     /* ---- slug colore specifici del tema ------------------------ */
-    // Solo slug davvero fragili (accent-N, foreground, tertiary di TT4/TT5).
-    // base/contrast/primary/secondary sono la baseline consigliata (§6.2-A) e non si segnalano.
-    // `has-background` da solo è una classe core, non uno slug: escluso.
-    if (preg_match_all('/preset\|color\|(accent-[1-6]|foreground|tertiary)\b|has-(accent-[1-6]|foreground|tertiary)-(?:background-)?color/', $content, $mc)) {
-        $slugs = array_filter(array_unique(array_merge($mc[1], $mc[2])));
-        $add_w('theme_color_slug', __('Slug colore specifici di TT4/TT5 (su un altro tema possono "spegnersi" — valuta i token lfw-*, §6.2-B):', 'lfw-cloud-patterns'), $slugs, array_slice(array_unique($mc[0]), 0, 5));
-        $add_f('strip_theme_colors', __('Rimuovi gli slug colore accent-*/foreground/tertiary → eredita dal tema', 'lfw-cloud-patterns'));
+    // Slug fragili: accent-N / foreground / tertiary di TT4/TT5, e white/black
+    // (palette Twentig). base/contrast/primary/secondary sono la baseline
+    // consigliata (§6.2-A) e non si segnalano. `has-background` da solo è core.
+    if (preg_match_all('/preset\|color\|(accent-[1-6]|foreground|tertiary|white|black)\b|has-(accent-[1-6]|foreground|tertiary|white|black)-(?:background-)?color|"(?:background|text|overlay)Color":"(accent-[1-6]|foreground|tertiary|white|black)"/', $content, $mc)) {
+        $slugs = array_filter(array_unique(array_merge($mc[1], $mc[2], $mc[3])));
+        $add_w('theme_color_slug', __('Slug colore specifici di un tema (su un altro possono "spegnersi"):', 'lfw-cloud-patterns'), $slugs, array_slice(array_unique($mc[0]), 0, 5));
+        $add_f('theme_colors_to_lfw', __('Slug colore del tema → token portabili lfw-accent / lfw-surface (il plugin li definisce con un colore di fallback tuo)', 'lfw-cloud-patterns'));
+        $add_f('strip_theme_colors', __('…oppure rimuovili del tutto → eredita dal tema', 'lfw-cloud-patterns'));
     }
 
     /* ---- classi/attributi utility di Twentig (framework "tw-") --- */
@@ -372,6 +373,13 @@ function lfw_patterns_autofix($content, $fix_ids, &$applied = null) {
         $new = lfw_patterns_fix_strip_vendor_classes($content);
         if ($new !== $content) {
             $applied[] = 'strip_vendor_classes';
+            $content = $new;
+        }
+    }
+    if (in_array('theme_colors_to_lfw', $fix_ids, true)) {
+        $new = lfw_patterns_fix_theme_colors_to_lfw($content);
+        if ($new !== $content) {
+            $applied[] = 'theme_colors_to_lfw';
             $content = $new;
         }
     }
@@ -702,6 +710,8 @@ function lfw_patterns_fix_strip_theme_colors($content) {
     $content = preg_replace('/,?"gradient":"' . $slug_re . '"/', '', $content);
     // valori var:preset|color|<slug> annidati in style{} (background, text, border.*.color, …)
     $content = preg_replace('/,?"(?:background|text|color)":"var:preset\|color\|' . $slug_re . '"/', '', $content);
+    // forma custom-prop con "--" scritto come -- (l'editor lo escapa dentro i commenti di blocco)
+    $content = preg_replace('/,?"(?:background|text|color)":"var\(\\\\u002d\\\\u002dwp\\\\u002d\\\\u002dpreset\\\\u002d\\\\u002dcolor\\\\u002d\\\\u002d' . $slug_re . '\)"/', '', $content);
 
     // 2. classi: has-<slug>-background-color / has-<slug>-color + orfane core
     $content = preg_replace_callback('/\sclass="([^"]*)"/', function ($m) use ($slug_re) {
@@ -709,8 +719,10 @@ function lfw_patterns_fix_strip_theme_colors($content) {
         $removed_bg = false;
         $removed_tx = false;
         $keep = array();
+        $removed_bd = false;
         foreach ($tokens as $t) {
             if (preg_match('/^has-' . $slug_re . '-background-color$/', $t)) { $removed_bg = true; continue; }
+            if (preg_match('/^has-' . $slug_re . '-border-color$/', $t))     { $removed_bd = true; continue; }
             if (preg_match('/^has-' . $slug_re . '-color$/', $t))            { $removed_tx = true; continue; }
             $keep[] = $t;
         }
@@ -719,6 +731,9 @@ function lfw_patterns_fix_strip_theme_colors($content) {
         }
         if ($removed_tx) {
             $keep = array_values(array_diff($keep, array('has-text-color')));
+        }
+        if ($removed_bd) {
+            $keep = array_values(array_diff($keep, array('has-border-color')));
         }
         $cls = implode(' ', array_filter($keep));
         return '' === $cls ? '' : ' class="' . $cls . '"';
@@ -738,6 +753,46 @@ function lfw_patterns_fix_strip_theme_colors($content) {
     $content = preg_replace('/\sstyle="\s*"/', '', $content);
 
     return $content;
+}
+
+/**
+ * Rimappa gli slug colore fragili di un tema sui token portabili del plugin
+ * (registrati via wp_theme_json_data_theme, §6.2-B), invece di rimuoverli:
+ *   scuri  (accent-1/2, foreground, black)          -> lfw-accent  / lfw-on-accent
+ *   chiari (accent-3..6, tertiary, white)           -> lfw-surface / lfw-on-surface
+ * Agisce su backgroundColor/textColor/overlayColor, sulle classi has-<slug>-*
+ * e sulle dichiarazioni inline var(--wp--preset--color--<slug>).
+ */
+function lfw_patterns_fix_theme_colors_to_lfw($content) {
+    $bg_map = array(
+        'accent-1' => 'lfw-accent',  'accent-2' => 'lfw-accent',  'foreground' => 'lfw-accent',  'black' => 'lfw-accent',
+        'accent-3' => 'lfw-surface', 'accent-4' => 'lfw-surface', 'accent-5' => 'lfw-surface',
+        'accent-6' => 'lfw-surface', 'tertiary' => 'lfw-surface', 'white' => 'lfw-surface',
+    );
+    $txt_map = array(
+        'accent-1' => 'lfw-on-accent',  'accent-2' => 'lfw-on-accent',  'foreground' => 'lfw-on-accent',  'white' => 'lfw-on-accent',
+        'accent-3' => 'lfw-on-surface', 'accent-4' => 'lfw-on-surface', 'accent-5' => 'lfw-on-surface',
+        'accent-6' => 'lfw-on-surface', 'tertiary' => 'lfw-on-surface', 'black' => 'lfw-on-surface',
+    );
+
+    foreach ($bg_map as $from => $to) {
+        // attributi background/overlay
+        $content = preg_replace('/"(background|overlay)Color":"' . preg_quote($from, '/') . '"/', '"$1Color":"' . $to . '"', $content);
+        // classi has-<slug>-background-color
+        $content = preg_replace('/has-' . preg_quote($from, '/') . '-background-color\b/', 'has-' . $to . '-background-color', $content);
+        // var:preset|color|<slug> come valore di background dentro style{}
+        $content = preg_replace('/"background":"var:preset\|color\|' . preg_quote($from, '/') . '"/', '"background":"var:preset|color|' . $to . '"', $content);
+        // CSS inline background-color / [side]background-color
+        $content = preg_replace('/background-color:var\(--wp--preset--color--' . preg_quote($from, '/') . '\)/', 'background-color:var(--wp--preset--color--' . $to . ')', $content);
+    }
+    foreach ($txt_map as $from => $to) {
+        $content = preg_replace('/"textColor":"' . preg_quote($from, '/') . '"/', '"textColor":"' . $to . '"', $content);
+        $content = preg_replace('/has-' . preg_quote($from, '/') . '-color\b/', 'has-' . $to . '-color', $content);
+        $content = preg_replace('/"text":"var:preset\|color\|' . preg_quote($from, '/') . '"/', '"text":"var:preset|color|' . $to . '"', $content);
+        $content = preg_replace('/(?<![-\w])color:var\(--wp--preset--color--' . preg_quote($from, '/') . '\)/', 'color:var(--wp--preset--color--' . $to . ')', $content);
+    }
+    // Slug fragili rimasti in posizioni non rimappabili (bordi, gradienti): rimuovili come strip.
+    return lfw_patterns_fix_strip_theme_colors($content);
 }
 
 /** Rimuove l'attributo "ref" dai soli core/navigation: l'header/footer adotta il menu del sito di destinazione. */

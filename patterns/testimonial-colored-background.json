@@ -1,0 +1,9 @@
+{
+    "title": "Testimonial: colored background",
+    "slug": "lfw/testimonial-colored-background",
+    "categories": [
+        "testimonials"
+    ],
+    "viewportWidth": 1366,
+    "content": "<!-- wp:group {\"metadata\":{\"name\":\"Testimonianze\"},\"align\":\"full\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|70\",\"bottom\":\"var:preset|spacing|70\"}}},\"backgroundColor\":\"lfw-surface\",\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group alignfull has-lfw-surface-background-color has-background\" style=\"padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)\"><!-- wp:quote {\"textAlign\":\"center\",\"className\":\"is-style-plain\",\"style\":{\"typography\":{\"lineHeight\":\"1.2\"}},\"fontSize\":\"x-large\"} --><blockquote class=\"wp-block-quote has-text-align-center is-style-plain has-x-large-font-size\" style=\"line-height:1.2\"><!-- wp:paragraph --><p>\"Lorem ipsum dolor sit amet, commodo erat adipiscing elit. Sed do eiusmod tempor incididunt ut labore dolore. Duis enim elit porttitor.\"</p><!-- /wp:paragraph --><cite>James Clark, Designer</cite></blockquote><!-- /wp:quote --></div><!-- /wp:group -->"
+}

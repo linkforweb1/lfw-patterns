@@ -1,5 +1,5 @@
 {
-    "count": 136,
+    "count": 140,
     "files": [
         "patterns/2-column-cards-cover.json",
         "patterns/2-column-cards-unstretched-image.json",
@@ -31,6 +31,8 @@
         "patterns/cta-book-links.json",
         "patterns/cta-book-locations.json",
         "patterns/cta-centered-heading.json",
+        "patterns/cta-colored-background-with-text.json",
+        "patterns/cta-colored-background.json",
         "patterns/cta-cover-with-buttons.json",
         "patterns/cta-events-list.json",
         "patterns/cta-grid-products-link.json",
@@ -80,6 +82,7 @@
         "patterns/hero-podcast.json",
         "patterns/hero-with-button.json",
         "patterns/hero-with-buttons-and-image.json",
+        "patterns/hero-with-colored-background.json",
         "patterns/horizontal-cards.json",
         "patterns/image-and-text.json",
         "patterns/info-2-columns.json",
@@ -122,6 +125,7 @@
         "patterns/team-4-columns-x-2.json",
         "patterns/team-list.json",
         "patterns/testimonial-colored-background-with-thumbnail.json",
+        "patterns/testimonial-colored-background.json",
         "patterns/testimonial-cover.json",
         "patterns/testimonial-image-on-left.json",
         "patterns/testimonial-image-on-right.json",
