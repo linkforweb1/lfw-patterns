@@ -1,0 +1,9 @@
+{
+    "title": "Titolo e modulo di ricerca",
+    "slug": "lfw/cta-heading-search",
+    "description": "Titolo grande con modulo di ricerca per una navigazione veloce.",
+    "categories": [
+        "call-to-action"
+    ],
+    "content": "<!-- wp:group {\"align\":\"wide\",\"style\":{\"spacing\":{\"blockGap\":\"var:preset|spacing|50\",\"padding\":{\"top\":\"var:preset|spacing|80\",\"bottom\":\"var:preset|spacing|80\"}}},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group alignwide\" style=\"padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)\"><!-- wp:group {\"align\":\"wide\",\"layout\":{\"type\":\"default\"}} -->\n\t<div class=\"wp-block-group alignwide\">\n\t\t<!-- wp:heading {\"fontSize\":\"xx-large\"} -->\n\t\t<h2 class=\"wp-block-heading has-xx-large-font-size\">Cosa stai cercando?</h2>\n\t\t<!-- /wp:heading -->\n\n\t\t<!-- wp:search {\"label\":\"Cerca\",\"showLabel\":false,\"placeholder\":\"Scrivi qui...\",\"buttonText\":\"Cerca\"} /-->\n\t</div>\n\t<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+}

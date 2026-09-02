@@ -168,6 +168,13 @@ function lfw_patterns_lint($content, $meta = array()) {
     }
     if (preg_match('/"ref":\d+/', $content)) {
         $np[] = '"ref":N (blocco riutilizzabile o menu del sito)';
+        // Se ogni "ref" è dentro un core/navigation, offri il fix mirato:
+        // togliere il ref fa sì che l'header/footer adotti il menu del sito di destinazione.
+        $refs_total = preg_match_all('/"ref":\d+/', $content);
+        $refs_nav   = preg_match_all('/<!--\s+wp:navigation\s+\{(?:(?!-->).)*?"ref":\d+(?:(?!-->).)*?\}\s+\/?-->/s', $content);
+        if ($refs_total > 0 && $refs_total === $refs_nav) {
+            $add_f('strip_nav_refs', __('Rimuovi "ref" da core/navigation → usa il menu del sito di destinazione', 'lfw-cloud-patterns'));
+        }
     }
     if ($np) {
         $add_e('nonportable_block', __('Elementi che non sopravvivono al trasferimento su un altro sito (rimuovili o sostituiscili con blocchi statici):', 'lfw-cloud-patterns'), $np);
@@ -242,6 +249,18 @@ function lfw_patterns_lint($content, $meta = array()) {
     if (preg_match_all('/preset\|color\|(accent-[1-6]|foreground|tertiary)\b|has-(accent-[1-6]|foreground|tertiary)-(?:background-)?color/', $content, $mc)) {
         $slugs = array_filter(array_unique(array_merge($mc[1], $mc[2])));
         $add_w('theme_color_slug', __('Slug colore specifici di TT4/TT5 (su un altro tema possono "spegnersi" — valuta i token lfw-*, §6.2-B):', 'lfw-cloud-patterns'), $slugs, array_slice(array_unique($mc[0]), 0, 5));
+        $add_f('strip_theme_colors', __('Rimuovi gli slug colore accent-*/foreground/tertiary → eredita dal tema', 'lfw-cloud-patterns'));
+    }
+
+    /* ---- classi/attributi utility di Twentig (framework "tw-") --- */
+    // tw-cols-stack-*, tw-stack, ecc. + attributi JSON twStack/twGap/…: inerti
+    // senza il plugin Twentig (impilamento colonne responsive, spaziature).
+    $tw_hits = array();
+    if (preg_match_all('/\btw-[a-z][a-z0-9-]*\b/', $content, $m)) { $tw_hits = array_merge($tw_hits, $m[0]); }
+    if (preg_match_all('/"tw[A-Z][A-Za-z0-9]*":/', $content, $m)) { $tw_hits = array_merge($tw_hits, $m[0]); }
+    if ($tw_hits) {
+        $add_w('vendor_class', __('Classi/attributi utility di Twentig ("tw-…", "twStack"…): senza quel plugin sono inerti (impilamento colonne responsive, spaziature).', 'lfw-cloud-patterns'), array_slice(array_unique($tw_hits), 0, 8));
+        $add_f('strip_vendor_classes', __('Rimuovi le classi/attributi Twentig (tw-*, twStack…)', 'lfw-cloud-patterns'));
     }
 
     /* ---- fontFamily ------------------------------------------- */
@@ -346,6 +365,27 @@ function lfw_patterns_autofix($content, $fix_ids, &$applied = null) {
         $new = lfw_patterns_fix_strip_class_tokens($content, '/\bagl(?:-[a-z0-9]+)*\b/');
         if ($new !== $content) {
             $applied[] = 'strip_anim_classes';
+            $content = $new;
+        }
+    }
+    if (in_array('strip_vendor_classes', $fix_ids, true)) {
+        $new = lfw_patterns_fix_strip_vendor_classes($content);
+        if ($new !== $content) {
+            $applied[] = 'strip_vendor_classes';
+            $content = $new;
+        }
+    }
+    if (in_array('strip_theme_colors', $fix_ids, true)) {
+        $new = lfw_patterns_fix_strip_theme_colors($content);
+        if ($new !== $content) {
+            $applied[] = 'strip_theme_colors';
+            $content = $new;
+        }
+    }
+    if (in_array('strip_nav_refs', $fix_ids, true)) {
+        $new = lfw_patterns_fix_strip_nav_refs($content);
+        if ($new !== $content) {
+            $applied[] = 'strip_nav_refs';
             $content = $new;
         }
     }
@@ -635,6 +675,79 @@ function lfw_patterns_fix_strip_class_tokens($content, $token_re) {
     return $content;
 }
 
+/**
+ * Rimuove le utility di Twentig: classi "tw-*" (className JSON + class HTML) e
+ * attributi di blocco "twStack"/"twGap"/… Senza il plugin Twentig sono inerti.
+ */
+function lfw_patterns_fix_strip_vendor_classes($content) {
+    $content = lfw_patterns_fix_strip_class_tokens($content, '/\btw-[a-z][a-z0-9-]*\b/');
+    // attributi JSON del blocco: "twStack":"md-2" | "twGap":true | "twHide":3
+    $content = preg_replace('/,?"tw[A-Z][A-Za-z0-9]*":"[^"]*"/', '', $content);
+    $content = preg_replace('/,?"tw[A-Z][A-Za-z0-9]*":(?:true|false|null|\d+(?:\.\d+)?)/', '', $content);
+    $content = preg_replace('/\{\s*,/', '{', $content);
+    return $content;
+}
+
+/**
+ * Rimuove gli slug colore fragili di TT4/TT5 (accent-1..6, foreground, tertiary):
+ * attributi backgroundColor/textColor, classi has-<slug>-(background-)color e le
+ * classi core orfane (has-background / has-text-color), dichiarazioni inline.
+ * Il blocco torna a ereditare i colori dal tema di destinazione.
+ */
+function lfw_patterns_fix_strip_theme_colors($content) {
+    $slug_re = '(?:accent-[1-6]|foreground|tertiary)';
+
+    // 1. attributi JSON (backgroundColor/textColor/overlayColor/borderColor/gradient)
+    $content = preg_replace('/,?"(?:background|text|overlay|border)Color":"' . $slug_re . '"/', '', $content);
+    $content = preg_replace('/,?"gradient":"' . $slug_re . '"/', '', $content);
+    // valori var:preset|color|<slug> annidati in style{} (background, text, border.*.color, …)
+    $content = preg_replace('/,?"(?:background|text|color)":"var:preset\|color\|' . $slug_re . '"/', '', $content);
+
+    // 2. classi: has-<slug>-background-color / has-<slug>-color + orfane core
+    $content = preg_replace_callback('/\sclass="([^"]*)"/', function ($m) use ($slug_re) {
+        $tokens = preg_split('/\s+/', trim($m[1]));
+        $removed_bg = false;
+        $removed_tx = false;
+        $keep = array();
+        foreach ($tokens as $t) {
+            if (preg_match('/^has-' . $slug_re . '-background-color$/', $t)) { $removed_bg = true; continue; }
+            if (preg_match('/^has-' . $slug_re . '-color$/', $t))            { $removed_tx = true; continue; }
+            $keep[] = $t;
+        }
+        if ($removed_bg) {
+            $keep = array_values(array_diff($keep, array('has-background')));
+        }
+        if ($removed_tx) {
+            $keep = array_values(array_diff($keep, array('has-text-color')));
+        }
+        $cls = implode(' ', array_filter($keep));
+        return '' === $cls ? '' : ' class="' . $cls . '"';
+    }, $content);
+
+    // 3. dichiarazioni inline con quei preset (color:, background-color:, border-*-color:, …)
+    $content = preg_replace('/[a-z-]*color:var\(--wp--preset--color--' . $slug_re . '\);?/', '', $content);
+
+    // 4. pulizia oggetti/virgole/style vuoti
+    $content = preg_replace('/,?"color":\{\}/', '', $content);
+    $content = preg_replace('/"(?:top|right|bottom|left)":\{\s*\}/', '', $content);
+    $content = preg_replace('/,?"border":\{\s*\}/', '', $content);
+    $content = preg_replace('/\{\s*,/', '{', $content);
+    $content = preg_replace('/,\s*\}/', '}', $content);
+    $content = preg_replace('/,?"style":\{\}/', '', $content);
+    $content = preg_replace('/style="\s*;?\s*"/', '', $content);
+    $content = preg_replace('/\sstyle="\s*"/', '', $content);
+
+    return $content;
+}
+
+/** Rimuove l'attributo "ref" dai soli core/navigation: l'header/footer adotta il menu del sito di destinazione. */
+function lfw_patterns_fix_strip_nav_refs($content) {
+    return preg_replace_callback('/<!--\s+wp:navigation\s+\{(?:(?!-->).)*?\}\s+\/?-->/s', function ($m) {
+        $s = preg_replace('/,?"ref":\d+/', '', $m[0]);
+        return preg_replace('/\{\s*,/', '{', $s);
+    }, $content);
+}
+
 /** Toglie fontFamily: attributo JSON, classe has-*-font-family, dichiarazione inline. */
 function lfw_patterns_fix_strip_fontfamily($content) {
     $content = preg_replace('/,?"fontFamily":"[^"]*"/', '', $content);
@@ -661,7 +774,6 @@ function lfw_patterns_placeholder_src() {
          . "<rect width='1200' height='800' fill='#e5e5e5'/>"
          . "<circle cx='330' cy='262' r='96' fill='#cfcfcf'/>"
          . "<path d='M110 704 L430 384 L642 596 L832 430 L1094 700 V704 Z' fill='#cfcfcf'/>"
-         . "<text x='600' y='432' font-family='-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif' font-size='44' fill='#8a8a8a' text-anchor='middle'>segnaposto immagine</text>"
          . "</svg>";
     $uri = 'data:image/svg+xml,' . rawurlencode($svg);
     return $uri;

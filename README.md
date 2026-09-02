@@ -30,12 +30,15 @@ il plugin propaga `title`, `categories`, `keywords`, `viewportWidth`, `descripti
 
 I pattern devono essere **portabili tra temi e siti diversi**:
 
-- solo blocchi `core/*` (niente blocchi di temi o plugin);
-- colori a **slug di preset** (`base`, `contrast`, …), mai `#hex` grezzi sul testo;
+- solo blocchi `core/*` (niente blocchi di temi o plugin), niente classi/attributi
+  utility di framework (`tw-*`, `agl*` di Twentig);
+- colori a **slug di preset** neutri (`base`, `contrast`, …), mai `#hex` grezzi sul
+  testo né slug specifici di un tema (`accent-1..6`, `foreground`, `tertiary`);
 - spaziature e dimensioni a **preset / `rem`**, mai `px`;
 - **nessuna risorsa esterna**: le immagini usano un segnaposto SVG inline, sostituibile
   nell'editor con un clic;
-- niente `href`/ID/menu legati a un sito specifico, niente `core/template-part`.
+- niente `href`/ID/menu legati a un sito specifico, niente `core/template-part`;
+  `core/navigation` senza `ref` (adotta il menu del sito di destinazione).
 
 Ogni push è **controllato dalla CI** (`bin/lint-patterns.php`): se un pattern viola le regole
 il commit risulta rosso. Lo stesso controllo, con auto-fix, è nel plugin → *LFW Patterns →

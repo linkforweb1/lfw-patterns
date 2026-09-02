@@ -1,0 +1,9 @@
+{
+    "title": "Header con titolo grande",
+    "slug": "lfw/header-large-title",
+    "description": "Site header with large site title and right-aligned navigation.",
+    "categories": [
+        "header"
+    ],
+    "content": "<!-- wp:group {\"style\":{\"border\":{\"bottom\":{\"width\":\"0.0625rem\"}},\"spacing\":{\"padding\":{\"top\":\"0\",\"bottom\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\" style=\"border-bottom-width:0.0625rem;padding-top:0;padding-bottom:0\">\n\t<!-- wp:group {\"align\":\"wide\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|30\",\"bottom\":\"var:preset|spacing|30\"}}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"space-between\",\"verticalAlignment\":\"center\"}} -->\n\t<div class=\"wp-block-group alignwide\" style=\"padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30)\">\n\t\t<!-- wp:site-title {\"level\":0,\"style\":{\"typography\":{\"fontSize\":\"var:preset|font-size|xx-large\",\"lineHeight\":\"1.2\"}}} /-->\n\t\t<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"right\":\"0\",\"left\":\"0\"}}},\"layout\":{\"type\":\"constrained\"}} -->\n\t\t<div class=\"wp-block-group\" style=\"padding-right:0;padding-left:0\">\n\t\t\t<!-- wp:navigation {\"overlayBackgroundColor\":\"base\",\"overlayTextColor\":\"contrast\",\"style\":{\"spacing\":{\"blockGap\":\"0\"}},\"layout\":{\"type\":\"flex\",\"justifyContent\":\"right\",\"orientation\":\"vertical\"}} /-->\n\t\t</div>\n\t\t<!-- /wp:group -->\n\t</div>\n\t<!-- /wp:group -->\n</div>\n<!-- /wp:group -->\n"
+}
