@@ -1,0 +1,9 @@
+{
+    "title": "Footer 2 columns: text and navigation",
+    "slug": "lfw/footer-2-columns-text-and-navigation",
+    "categories": [
+        "footer"
+    ],
+    "viewportWidth": 1366,
+    "content": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\"}}},\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group\" style=\"padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)\"><!-- wp:columns {\"align\":\"wide\",\"style\":{\"spacing\":{\"blockGap\":{\"top\":\"var:preset|spacing|40\",\"left\":\"8%\"}}}} --><div class=\"wp-block-columns alignwide\"><!-- wp:column {\"layout\":{\"type\":\"constrained\",\"justifyContent\":\"left\",\"contentSize\":\"440px\"}} --><div class=\"wp-block-column\"><!-- wp:site-logo /--><!-- wp:paragraph {\"fontSize\":\"small\"} --><p class=\"has-small-font-size\">16 Thompson Street<br>San Francisco, CA 94102</p><!-- /wp:paragraph --></div><!-- /wp:column --><!-- wp:column {\"width\":\"12.5rem\"} --><div class=\"wp-block-column\" style=\"flex-basis:200px\"><!-- wp:navigation {\"overlayMenu\":\"never\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\"},\"style\":{\"spacing\":{\"blockGap\":\"1rem\"}},\"fontSize\":\"small\"} --><!-- wp:navigation-link {\"isTopLevelLink\":true} /--><!-- wp:navigation-link {\"isTopLevelLink\":true} /--><!-- wp:navigation-link {\"isTopLevelLink\":true} /--><!-- /wp:navigation --></div><!-- /wp:column --></div><!-- /wp:columns --><!-- wp:group {\"align\":\"wide\",\"style\":{\"spacing\":{\"margin\":{\"top\":\"var:preset|spacing|50\"}}},\"layout\":{\"type\":\"flex\"}} --><div class=\"wp-block-group alignwide\" style=\"margin-top:var(--wp--preset--spacing--50)\"><!-- wp:paragraph {\"fontSize\":\"small\"} --><p class=\"has-small-font-size\">© 2026. Creato con Twentig.</p><!-- /wp:paragraph --></div><!-- /wp:group --></div><!-- /wp:group -->"
+}

@@ -1,7 +1,7 @@
 {
     "title": "Header con titolo grande",
     "slug": "lfw/header-large-title",
-    "description": "Site header with large site title and right-aligned navigation.",
+    "description": "Header del sito con titolo grande e navigazione allineata a destra.",
     "categories": [
         "header"
     ],

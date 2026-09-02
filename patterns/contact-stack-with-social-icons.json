@@ -1,0 +1,9 @@
+{
+    "title": "Contact: stack with social icons",
+    "slug": "lfw/contact-stack-with-social-icons",
+    "categories": [
+        "contact"
+    ],
+    "viewportWidth": 1366,
+    "content": "<!-- wp:group {\"metadata\":{\"name\":\"Contatti\"},\"align\":\"full\",\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group alignfull\"><!-- wp:heading {\"textAlign\":\"center\"} --><h2 class=\"has-text-align-center\">Mettiti in contatto</h2><!-- /wp:heading --><!-- wp:paragraph {\"align\":\"center\"} --><p class=\"has-text-align-center\">Se hai domande o vuoi semplicemente salutarci, non esitare a contattarci. Ti ricontatteremo al più presto.</p><!-- /wp:paragraph --><!-- wp:paragraph {\"align\":\"center\"} --><p class=\"has-text-align-center\"><a href=\"mailto:contact@example.com\">contact@example.com</a></p><!-- /wp:paragraph --><!-- wp:social-links {\"size\":\"has-small-icon-size\",\"style\":{\"spacing\":{\"margin\":{\"top\":\"var:preset|spacing|40\"}}},\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"}} --><ul class=\"wp-block-social-links has-small-icon-size\" style=\"margin-top:var(--wp--preset--spacing--40)\"><!-- wp:social-link {\"url\":\"#\",\"service\":\"twitter\"} /--><!-- wp:social-link {\"url\":\"#\",\"service\":\"instagram\"} /--><!-- wp:social-link {\"url\":\"#\",\"service\":\"linkedin\"} /--></ul><!-- /wp:social-links --></div><!-- /wp:group -->"
+}

@@ -1,0 +1,9 @@
+{
+    "title": "Heading and text",
+    "slug": "lfw/heading-and-text",
+    "categories": [
+        "text"
+    ],
+    "viewportWidth": 1366,
+    "content": "<!-- wp:group {\"metadata\":{\"name\":\"Heading and text\"},\"align\":\"full\",\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group alignfull\"><!-- wp:heading --><h2 class=\"wp-block-heading\">Scrivi un titolo</h2><!-- /wp:heading --><!-- wp:paragraph --><p>Venenatis nec convallis magna, eu congue velit. Aliquam tempus mi nulla porta luctus. Sed non neque at lectus bibendum blandit. Duis enim elit, porttitor id feugiat at, blandit at erat. Proin varius libero sit amet tortor volutpat diam laoreet. Fusce sed magna eu ligula commodo hendrerit.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>Aliquam tempus mi nulla porta luctus. Sed non neque at lectus bibendum blandit. Morbi fringilla sapien libero. Duis enim elit, porttitor id feugiat at, blandit at erat. Proin varius libero sit amet tortor volutpat diam laoreet.</p><!-- /wp:paragraph --></div><!-- /wp:group -->"
+}

@@ -1,7 +1,7 @@
 {
     "title": "Header con colonne",
     "slug": "lfw/header-columns",
-    "description": "Site header with site title and navigation in columns.",
+    "description": "Header del sito con titolo e navigazione in colonne.",
     "categories": [
         "header"
     ],

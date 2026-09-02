@@ -1,0 +1,9 @@
+{
+    "title": "Heading and large text",
+    "slug": "lfw/heading-and-large-text",
+    "categories": [
+        "text"
+    ],
+    "viewportWidth": 1366,
+    "content": "<!-- wp:group {\"metadata\":{\"name\":\"Heading and text\"},\"align\":\"full\",\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group alignfull\"><!-- wp:heading {\"textAlign\":\"center\"} --><h2 class=\"wp-block-heading has-text-align-center\">Scrivi un titolo</h2><!-- /wp:heading --><!-- wp:paragraph {\"fontSize\":\"large\",\"align\":\"center\",\"style\":{\"typography\":{\"lineHeight\":\"1.35\"}}} --><p class=\"has-text-align-center has-large-font-size\" style=\"line-height:1.35\">Lorem ipsum dolor sit amet, commodo erat adipiscing elit. Sed do eiusmod ut tempor incididunt ut labore et dolore. Integer enim risus suscipit eu iaculis.</p><!-- /wp:paragraph --></div><!-- /wp:group -->"
+}
