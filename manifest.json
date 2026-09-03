@@ -1,5 +1,5 @@
 {
-    "count": 140,
+    "count": 141,
     "files": [
         "patterns/2-column-cards-cover.json",
         "patterns/2-column-cards-unstretched-image.json",
@@ -93,6 +93,7 @@
         "patterns/logos.json",
         "patterns/media-instagram-grid.json",
         "patterns/media-list-with-image-and-button.json",
+        "patterns/navigation-overlay-menu-cta.json",
         "patterns/numbers-2-columns-x-2.json",
         "patterns/numbers-3-columns-with-top-border.json",
         "patterns/numbers-3-columns.json",

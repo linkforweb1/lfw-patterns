@@ -1,0 +1,20 @@
+{
+    "title": "Menu overlay con CTA e contatti",
+    "slug": "lfw/navigation-overlay-menu-cta",
+    "description": "Contenuto per l'overlay del blocco Navigazione (\"Crea un overlay\"): menu verticale grande, pulsante CTA, contatti e link social.",
+    "categories": [
+        "header"
+    ],
+    "keywords": [
+        "menu",
+        "overlay",
+        "mobile",
+        "navigazione",
+        "cta",
+        "contatti"
+    ],
+    "blockTypes": [
+        "core/template-part/navigation-overlay"
+    ],
+    "content": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"top\":\"var:preset|spacing|70\",\"right\":\"var:preset|spacing|50\",\"bottom\":\"var:preset|spacing|50\",\"left\":\"var:preset|spacing|50\"},\"blockGap\":\"var:preset|spacing|40\"}},\"layout\":{\"type\":\"constrained\",\"contentSize\":\"32rem\"}} -->\n<div class=\"wp-block-group\" style=\"padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50)\"><!-- wp:navigation {\"overlayMenu\":\"never\",\"style\":{\"typography\":{\"lineHeight\":\"1.7\"},\"spacing\":{\"blockGap\":\"var:preset|spacing|10\"}},\"fontSize\":\"large\",\"layout\":{\"type\":\"flex\",\"orientation\":\"vertical\",\"justifyContent\":\"left\"}} /-->\n\n<!-- wp:buttons {\"style\":{\"spacing\":{\"margin\":{\"top\":\"var:preset|spacing|30\"}}}} -->\n<div class=\"wp-block-buttons\" style=\"margin-top:var(--wp--preset--spacing--30)\"><!-- wp:button -->\n<div class=\"wp-block-button\"><a class=\"wp-block-button__link wp-element-button\" href=\"#\">Prenota una consulenza</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->\n\n<!-- wp:paragraph {\"fontSize\":\"small\"} -->\n<p class=\"has-small-font-size\">Via Roma 1, 00100 Città<br>Lun–Ven 9–18</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph {\"fontSize\":\"small\"} -->\n<p class=\"has-small-font-size\"><a href=\"#\">info@esempio.it</a> · <a href=\"#\">+39 000 000 0000</a></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:social-links {\"className\":\"is-style-logos-only\"} -->\n<ul class=\"wp-block-social-links is-style-logos-only\"><!-- wp:social-link {\"url\":\"#\",\"service\":\"facebook\"} /-->\n\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"instagram\"} /-->\n\n<!-- wp:social-link {\"url\":\"#\",\"service\":\"linkedin\"} /--></ul>\n<!-- /wp:social-links --></div>\n<!-- /wp:group -->"
+}
